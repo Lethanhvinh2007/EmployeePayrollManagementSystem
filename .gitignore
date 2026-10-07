@@ -1,0 +1,10 @@
+## .NET Build Output (Tu dong sinh boi .NET Compiler)
+bin/
+obj/
+*.pdb
+*.runtimeconfig.json
+
+## Tai lieu ke hoach va on tap noi bo (Khong dua len GitHub)
+4Tuan/
+VanDap_LiveDefense_Payroll.md
+Backup_Week4_Full/
