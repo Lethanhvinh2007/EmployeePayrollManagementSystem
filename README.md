@@ -1,7 +1,7 @@
 # Employee Payroll Management System
 
 Đồ án môn học: Lập trình Hướng đối tượng (OOP)  
-Trường: Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)  
+Trường: Đại học Công Nghệ Kỹ thuật TP.HCM (HCMUTE)  
 Giảng viên hướng dẫn: TS. Huỳnh Xuân Phụng  
 Sinh viên thực hiện: Lê Thanh Vinh - MSSV: 25110075  
 
