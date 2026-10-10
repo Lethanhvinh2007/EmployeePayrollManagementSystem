@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using EmployeePayrollSystem.Models;
+using EmployeePayrollSystem.Tests;
 
 namespace EmployeePayrollSystem
 {
@@ -8,96 +8,45 @@ namespace EmployeePayrollSystem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== DO AN LAP TRINH HUONG DOI TUONG (OOP) - HCMUTE ===");
-            Console.WriteLine("De tai: Employee Payroll Management System (Tuan 1)");
+            Console.WriteLine("=== Do an Lap trinh huong doi tuong (OOP) - HCMUTE ===");
+            Console.WriteLine("De tai: Employee Payroll Management System (Tuan 2)");
             Console.WriteLine("Sinh vien: Le Thanh Vinh - MSSV: 25110075\n");
 
-            TestKhoiTaoVaTinhLuongGop();
-            TestKiemTraRangBuocDuLieu();
+            // 1. Chay thu nghiem mo hinh phong ban va cong ty (Composition & Polymorphism)
+            DemoCongTy();
 
-            Console.WriteLine("\n[Hoan tat kiem thu Tuan 1]");
+            // 2. Chay bo kiem thu tu dong (Unit Tests)
+            PayrollUnitTests.RunAllTests();
+
+            Console.WriteLine("[Hoan tat chuong trinh]");
         }
 
-        #region 1. Kiem thu khoi tao va tinh luong gop
-        static void TestKhoiTaoVaTinhLuongGop()
+        #region Trinh dien mo hinh Cong ty & Phong ban (Composition)
+        static void DemoCongTy()
         {
-            Console.WriteLine("=== 1. Kiem thu khoi tao 3 loai nhan vien va tinh luong gop ===");
+            Console.WriteLine("=== Demo quan ly cong ty va phong ban (Composition) ===");
 
-            // 1. Nhan vien bien che (Salaried)
-            SalariedEmployee emp1 = new SalariedEmployee("SAL01", "Nhi", "IT", 30000000);
+            // 1. Khoi tao cong ty
+            Company company = new Company("Cong ty Cong nghe HCMUTE");
 
-            // 2. Nhan vien theo gio (Hourly) - lam 48h (tieu chuan 40h + 8h OT x1.5)
-            HourlyEmployee emp2 = new HourlyEmployee("HOU02", "Ngoc", "CSKH", 100000, 48.0);
+            // 2. Khoi tao phong ban IT va them cac nhan vien (Composition)
+            Department itDept = new Department("Phong Ky thuat IT");
+            SalariedEmployee salEmp = new SalariedEmployee("SAL01", "Nhi", "Phong Ky thuat IT", 30000000);
+            HourlyEmployee houEmp = new HourlyEmployee("HOU02", "Ngoc", "Phong Ky thuat IT", 100000, 48.0); // 40h + 8h OT x1.5
+            itDept.AddEmployee(salEmp);
+            itDept.AddEmployee(houEmp);
 
-            // 3. Nhan vien hoa hong (Commission) - luong cung 8tr + doanh so 200tr hoa hong 5%
-            CommissionEmployee emp3 = new CommissionEmployee("COM03", "Vinh", "Sales", 8000000, 200000000, 0.05);
+            // 3. Khoi tao phong ban Sales va them nhan vien hoa hong
+            Department salesDept = new Department("Phong Kinh doanh Sales");
+            CommissionEmployee comEmp = new CommissionEmployee("COM03", "Vinh", "Phong Kinh doanh Sales", 8000000, 200000000, 0.05);
+            salesDept.AddEmployee(comEmp);
 
-            // Gom vao danh sach lop co so Employee de kiem tra tinh da hinh
-            List<Employee> danhSach = new List<Employee>();
-            danhSach.Add(emp1);
-            danhSach.Add(emp2);
-            danhSach.Add(emp3);
+            // 4. Them cac phong ban vao cong ty (Company so huu cac Department)
+            company.AddDepartment(itDept);
+            company.AddDepartment(salesDept);
 
-            Console.WriteLine("\nDanh sach nhan vien va luong gop (Gross Pay):");
-            foreach (Employee emp in danhSach)
-            {
-                Console.WriteLine("--------------------------------------------------");
-                Console.WriteLine(emp.ToString());
-                Console.WriteLine(" -> Loai hinh : " + emp.GetEmployeeType());
-                Console.WriteLine(" -> Luong gop : " + emp.CalculateGrossPay().ToString("N0") + " VND");
-            }
-            Console.WriteLine("--------------------------------------------------");
-        }
-        #endregion
-
-        #region 2. Kiem thu bat ngoai le du lieu sai (Validation)
-        static void TestKiemTraRangBuocDuLieu()
-        {
-            Console.WriteLine("\n=== 2. Kiem thu bat ngoai le rang buoc du lieu (Validation) ===");
-
-            // Test 1: Luong am
-            try
-            {
-                Console.Write("Test luong am: ");
-                SalariedEmployee loi1 = new SalariedEmployee("ERR01", "Quang", "Nhan su", -5000000);
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine("[Bat loi thanh cong] " + ex.Message);
-            }
-
-            // Test 2: Gio lam viec vuot 168h/tuan
-            try
-            {
-                Console.Write("Test gio lam > 168h: ");
-                HourlyEmployee loi2 = new HourlyEmployee("ERR02", "Huy", "Bao ve", 50000, 180);
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine("[Bat loi thanh cong] " + ex.Message);
-            }
-
-            // Test 3: Ty le hoa hong > 1.0 (100%)
-            try
-            {
-                Console.Write("Test hoa hong > 100%: ");
-                CommissionEmployee loi3 = new CommissionEmployee("ERR03", "Nam", "Sales", 5000000, 100000000, 1.5);
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine("[Bat loi thanh cong] " + ex.Message);
-            }
-
-            // Test 4: Ma nhan vien de trong
-            try
-            {
-                Console.Write("Test ma de trong: ");
-                SalariedEmployee loi4 = new SalariedEmployee("", "An", "Ke toan", 10000000);
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine("[Bat loi thanh cong] " + ex.Message);
-            }
+            // 5. In bao cao quy luong toan cong ty bang Da hinh (Polymorphism)
+            company.PrintPayrollReport();
         }
         #endregion
     }
