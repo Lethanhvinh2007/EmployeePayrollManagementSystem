@@ -1,95 +1,85 @@
 # Employee Payroll Management System
 
-Đồ án môn học: Lập trình Hướng đối tượng (OOP)  
-Trường: Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)  
-Giảng viên hướng dẫn: TS. Huỳnh Xuân Phụng  
-Sinh viên thực hiện: Lê Thanh Vinh - MSSV: 25110075  
-Repository: [https://github.com/Lethanhvinh2007/EmployeePayrollManagementSystem](https://github.com/Lethanhvinh2007/EmployeePayrollManagementSystem)  
+- **Môn học**: Lập trình Hướng đối tượng (OOP) - Đợt 1 HK1 2026-2027
+- **Trường**: Đại học Sư phạm Kỹ thuật TP.HCM (HCMUTE)
+- **Giảng viên hướng dẫn**: TS. Huỳnh Xuân Phụng
+- **Sinh viên thực hiện**: Lê Thanh Vinh - MSSV: 25110075
+- **Repository**: [https://github.com/Lethanhvinh2007/EmployeePayrollManagementSystem](https://github.com/Lethanhvinh2007/EmployeePayrollManagementSystem)
 
 ---
 
-## 1. Giới thiệu đề tài (Tiến độ: Tuần 3)
+## 1. Giới thiệu dự án & Tiến độ Tuần 3
 
-Chương trình quản lý và tính lương nhân viên xây dựng trên nền tảng C# .NET Console.
+Dự án xây dựng phần mềm quản lý và tính lương nhân viên bằng C# (.NET Console). 
 
-Dựa trên đề cương đồ án môn học và nhận xét của GVHD ở Tuần 2, giai đoạn Tuần 3 tập trung hiện thực hóa trọn vẹn các yêu cầu thiết kế hệ thống tính lương:
+Tiếp nối phần quản lý phòng ban và nhân viên ở Tuần 2, trong **Tuần 3** mình đã hoàn thiện thêm các tính năng sau theo yêu cầu đề bài:
 
-1. **Hệ thống khấu trừ (Interface IDeduction - Encapsulation & Composition):**
-   - Định nghĩa giao diện trừu tượng `IDeduction` chuẩn hóa hành vi tính giảm trừ lương.
-   - `TaxDeduction`: Tính thuế thu nhập cá nhân (PIT) có xét mức giảm trừ gia cảnh 11.000.000 VND (chỉ tính thuế đối với phần thu nhập chịu thuế vượt ngưỡng 11 triệu).
-   - `InsuranceDeduction`: Tính bảo hiểm bắt buộc tỷ lệ 10.5% (BHXH 8%, BHYT 1.5%, BHTN 1%), áp dụng quy tắc chặn mức trần đóng bảo hiểm 36.000.000 VND (thu nhập vượt trần chỉ đóng tối đa trên 36 triệu).
-   - Lớp `Employee` quản lý danh sách `List<IDeduction>` thông qua quan hệ **Composition**, đảm bảo logic khấu trừ không bị trùng lặp ở các lớp con (**Encapsulation**).
-2. **Phiếu báo lương chi tiết (`Payslip`) & Tính thực lĩnh (`NetPay`):**
-   - Sinh phiếu lương chi tiết `Payslip` cho từng nhân viên theo kỳ trả lương.
-   - Tính lương thực lĩnh: `NetPay = GrossPay - TotalDeductions`.
-   - Cơ chế bảo vệ cận biên: Đảm bảo thực lĩnh không bao giờ nhận giá trị âm (`Math.Max(0, netPay)`).
-3. **Bộ điều khiển tính lương hàng loạt (`PayrollRunner` - Polymorphism):**
-   - Áp dụng nguyên lý đa hình (Polymorphism) để tính toán lương, khấu trừ và sinh phiếu lương hàng loạt `RunPayroll()` cho toàn bộ nhân viên mà hoàn toàn không dùng câu lệnh rẽ nhánh `if/else` theo loại nhân viên.
-   - Tuân thủ nguyên lý đóng mở (**Open/Closed Principle - OCP**): khi mở rộng thêm loại nhân viên mới, mã nguồn của `PayrollRunner` được giữ nguyên vẹn.
-   - Xuất bảng tổng hợp tiền lương công ty `PrintSummaryReport()` có định dạng trực quan.
-4. **Bộ kiểm thử tự động (21 Unit Tests):**
-   - Kiểm tra đầy đủ kịch bản thực thi hoàn chỉnh (Happy Path end-to-end).
-   - Kiểm tra kịch bản tính lương đa hình (Polymorphism/Inheritance).
-   - Bắt các ngoại lệ dữ liệu sai và thao tác không hợp lệ (Validation/Error handling).
+1. **Hệ thống khấu trừ lương (Deductions)**:
+   - Tạo interface `IDeduction` dùng chung cho các loại giảm trừ.
+   - `TaxDeduction`: Tính thuế TNCN có trừ mức gia cảnh 11 triệu (chỉ phần lương vượt 11 triệu mới bị tính thuế).
+   - `InsuranceDeduction`: Tính bảo hiểm bắt buộc 10.5% (BHXH, BHYT, BHTN), có áp dụng mức trần đóng bảo hiểm tối đa 36 triệu.
+   - Gắn danh sách `List<IDeduction>` vào `Employee` theo quan hệ Composition.
 
----
+2. **Phiếu báo lương (Payslip) & Lương thực lĩnh (NetPay)**:
+   - Tạo lớp `Payslip` để in thông tin chi tiết: kỳ lương, lương gộp, từng khoản bị trừ và thực lĩnh.
+   - Công thức: `NetPay = GrossPay - Deductions`, có xử lý chặn không để lương thực lĩnh bị âm nếu tiền phạt/khấu trừ lớn hơn lương gộp.
 
-## 2. Cấu trúc mã nguồn (Tuần 3)
+3. **Điều phối tính lương hàng loạt (PayrollRunner)**:
+   - Xây dựng lớp `PayrollRunner` quản lý danh sách nhân viên và gọi tính lương tự động.
+   - Áp dụng tính Đa hình: chỉ cần duyệt danh sách gọi hàm `GeneratePayslip()` mà không cần dùng câu lệnh `if/else` để kiểm tra loại nhân viên, giúp code dễ mở rộng sau này.
+   - Xuất bảng tổng hợp tiền lương công ty ra console dạng bảng dễ nhìn.
 
-```text
-Employee Payroll Management System/
-│
-├── Deductions/                      # [Mới Tuần 3] Module khấu trừ lương
-│   ├── IDeduction.cs                # Giao diện chung cho các khoản giảm trừ
-│   ├── TaxDeduction.cs              # Khấu trừ thuế TNCN (giảm trừ gia cảnh 11tr)
-│   └── InsuranceDeduction.cs        # Khấu trừ bảo hiểm bắt buộc 10.5% (trần 36tr)
-│
-├── Models/                          # Các lớp thực thể đối tượng
-│   ├── Employee.cs                  # Lớp cơ sở trừu tượng (Cập nhật Deductions & NetPay)
-│   ├── SalariedEmployee.cs          # Nhân viên biên chế hưởng lương tháng
-│   ├── HourlyEmployee.cs            # Nhân viên theo giờ & Overtime x1.5 (> 40h)
-│   ├── CommissionEmployee.cs        # Nhân viên hoa hồng doanh số
-│   ├── Department.cs                # Quản lý danh sách nhân viên phòng ban (Composition)
-│   ├── Company.cs                   # Quản lý toàn bộ phòng ban công ty (Composition)
-│   └── Payslip.cs                   # [Mới Tuần 3] Phiếu báo lương chi tiết
-│
-├── Services/                        # [Mới Tuần 3] Module dịch vụ & điều phối
-│   └── PayrollRunner.cs             # Bộ điều phối tính lương hàng loạt đa hình
-│
-├── Tests/                           # Module kiểm thử tự động
-│   └── PayrollUnitTests.cs          # Bộ 21 bài kiểm thử tự động (Happy path, Validation, Polymorphism)
-│
-├── Program.cs                       # Entry point chạy demo hệ thống & chạy 21 tests
-├── EmployeePayrollSystem.csproj     # Cấu hình dự án .NET
-└── README.md                        # Tài liệu tiến độ dự án
-```
+4. **Kiểm thử tự động (Unit Tests)**:
+   - Chạy bộ 21 test case tự động kiểm tra đầy đủ các kịch bản: nhân viên mới, tính Overtime 40h x1.5, hoa hồng cận biên 0% và 100%, tính lương đa hình và bắt lỗi ngoại lệ dữ liệu.
 
 ---
 
-## 3. Danh mục 5 nhóm kiểm thử tự động (21 Unit Tests)
+## 2. Cấu trúc thư mục mã nguồn
 
-| Nhóm | Nội dung kiểm thử | Số ca test | Kết quả |
-| :--- | :--- | :---: | :---: |
-| **Nhóm 1** | Nhân viên mới nhận lương (Lương tháng cơ bản, 0h làm, 0đ doanh số) | 3 | Pass (100%) |
-| **Nhóm 2** | Overtime (35h không OT, cận biên 40h chuẩn, 48h và 60h hưởng OT x1.5) | 4 | Pass (100%) |
-| **Nhóm 3** | Hoa hồng cận biên (Cận biên dưới 0%, cận biên trên 100%, tiêu chuẩn 5%) | 3 | Pass (100%) |
-| **Nhóm 4** | Composition và Polymorphism (Phòng ban, Công ty tính tổng lương đa hình) | 5 | Pass (100%) |
-| **Nhóm 5** | Ràng buộc hợp lệ dữ liệu cơ bản (Lương âm, giờ > 168h, hoa hồng < 0 hoặc > 1, trùng mã NV) | 6 | Pass (100%) |
-| **Tổng** | **Toàn bộ hệ thống kiểm thử** | **21** | **21/21 Pass (100%)** |
+- `Deductions/`: Chứa các lớp tính khấu trừ
+  - `IDeduction.cs`: Interface tính giảm trừ
+  - `TaxDeduction.cs`: Tính thuế thu nhập cá nhân
+  - `InsuranceDeduction.cs`: Tính bảo hiểm bắt buộc
+- `Models/`: Các lớp đối tượng thực thể
+  - `Employee.cs`: Lớp trừu tượng cha, chứa thông tin chung và danh sách khấu trừ
+  - `SalariedEmployee.cs`: Nhân viên biên chế hưởng lương cố định
+  - `HourlyEmployee.cs`: Nhân viên tính công theo giờ (có OT x1.5 trên 40h)
+  - `CommissionEmployee.cs`: Nhân viên hưởng lương cứng + hoa hồng doanh số
+  - `Department.cs`: Quản lý danh sách nhân viên theo phòng ban
+  - `Company.cs`: Quản lý toàn bộ phòng ban trong công ty
+  - `Payslip.cs`: Thông tin phiếu lương chi tiết
+- `Services/`:
+  - `PayrollRunner.cs`: Bộ điều khiển chạy tính lương cho toàn bộ công ty
+- `Tests/`:
+  - `PayrollUnitTests.cs`: Bộ 21 bài test tự động
+- `Program.cs`: Chạy demo chương trình và chạy bộ test
 
 ---
 
-## 4. Hướng dẫn biên dịch và chạy chương trình
+## 3. Kết quả chạy kiểm thử (Unit Tests)
 
-Yêu cầu môi trường: Cài đặt .NET SDK (.NET 8.0 trở lên).
+Hệ thống tích hợp 21 bài kiểm thử tự động, kết quả đạt **21/21 Pass (100%)**:
+
+- **Nhóm 1 - Nhân viên mới**: Test lương tháng cơ bản, làm 0h nhận 0đ, doanh số 0đ.
+- **Nhóm 2 - Overtime**: Test dưới 40h, chạm đúng biên 40h, và làm vượt 40h tính x1.5.
+- **Nhóm 3 - Hoa hồng**: Test cận biên 0% (chỉ nhận lương cứng), cận biên 100% và mức 5% bình thường.
+- **Nhóm 4 - Composition & Polymorphism**: Test thêm nhân viên vào phòng ban, tính tổng lương công ty đa hình.
+- **Nhóm 5 - Bắt lỗi ngoại lệ (Validation)**: Test chặn lương âm, giờ làm quá 168h/tuần, hoa hồng sai khoảng và chặn trùng mã nhân viên.
+
+---
+
+## 4. Cách tải và chạy chương trình
+
+Yêu cầu máy đã cài .NET SDK (bản 8.0 trở lên).
 
 ```bash
-# 1. Di chuyển vào thư mục dự án
-cd "Employee Payroll Management System"
+# 1. Clone repo về máy (nếu chưa có)
+git clone https://github.com/Lethanhvinh2007/EmployeePayrollManagementSystem.git
+cd EmployeePayrollManagementSystem
 
-# 2. Biên dịch dự án
+# 2. Biên dịch
 dotnet build
 
-# 3. Chạy chương trình và kích hoạt 21 Unit Tests tự động
+# 3. Chạy chương trình
 dotnet run
 ```
