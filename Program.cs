@@ -11,11 +11,9 @@ namespace EmployeePayrollSystem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("==================================================================");
-            Console.WriteLine("=== DO AN LAP TRINH HUONG DOI TUONG (OOP) - KHOA CNTT - HCMUTE ===");
-            Console.WriteLine("=== De tai: Employee Payroll Management System (Tien do Tuan 3) ===");
-            Console.WriteLine("=== Sinh vien: Le Thanh Vinh - MSSV: 25110075                  ===");
-            Console.WriteLine("==================================================================\n");
+            Console.WriteLine("=== DO AN LAP TRINH HUONG DOI TUONG (OOP) ===");
+            Console.WriteLine("De tai: Employee Payroll Management System");
+            Console.WriteLine("Sinh vien: Le Thanh Vinh - MSSV: 25110075\n");
 
             // 1. Chay mo hinh quan ly Phong ban & Cong ty bang Composition (Tuan 2)
             DemoCongTyTuan2();
@@ -23,10 +21,13 @@ namespace EmployeePayrollSystem
             // 2. Chay nghiep vu Tuan 3: Khau tru (IDeduction), Phieu luong (Payslip) & PayrollRunner
             DemoPayrollRunnerTuan3();
 
-            // 3. Chay toan bo bo kiem thu tu dong 33 Unit Tests bao phu tat ca Edge Cases
+            // 3. Demo mo rong nhan vien Freelance & khau tru FlatFee chung minh OCP (Tuan 4)
+            DemoMoRongOCPTuan4();
+
+            // 4. Chay bo kiem thu tu dong 21 Unit Tests kiem tra cac truong hop bien
             PayrollUnitTests.RunAllTests();
 
-            Console.WriteLine("[Hoan tat toan bo chuong trinh Tuan 3]");
+            Console.WriteLine("[Hoan tat toan bo chuong trinh]");
         }
 
         #region 1. Trinh dien mo hinh Cong ty & Phong ban (Tuan 2)
@@ -75,7 +76,7 @@ namespace EmployeePayrollSystem
             runner.AddEmployee(emp2);
             runner.AddEmployee(emp3);
 
-            // Chay tinh luong ky thang 10/2026 bang Da hinh (Polymorphism)
+            // Tinh luong thang 10 va lay danh sach phieu luong
             List<Payslip> payslips = runner.RunPayroll("Thang 10/2026");
 
             // In thu phieu luong chi tiet cho 1 nhan vien (Payslip.ToString())
@@ -84,6 +85,35 @@ namespace EmployeePayrollSystem
 
             // In bang tong hop luong toan bo nhan vien
             runner.PrintSummaryReport("Thang 10/2026", payslips);
+            Console.WriteLine();
+        }
+        #endregion
+
+        #region 3. Trinh dien mo rong OCP (Tuan 4)
+        static void DemoMoRongOCPTuan4()
+        {
+            Console.WriteLine("=== 3. DEMO TINH MO RONG OPEN/CLOSED PRINCIPLE (TUAN 4) ===");
+            Console.WriteLine("Them nhan vien Freelance va khoan doan phi FlatFee ma khong can sua PayrollRunner:\n");
+
+            PayrollRunner runner = new PayrollRunner();
+
+            // Nhan vien freelance: Quang (4 du an * 5tr)
+            FreelanceContractorEmployee freelanceEmp = new FreelanceContractorEmployee(
+                "FLC01",
+                "Quang",
+                "Design",
+                4,
+                5000000
+            );
+
+            // Gan thue va khoan phi doan moi
+            freelanceEmp.AddDeduction(new TaxDeduction(0.10, 11000000));
+            freelanceEmp.AddDeduction(new FlatFeeDeduction("Doan phi", 100000));
+
+            runner.AddEmployee(freelanceEmp);
+
+            List<Payslip> slips = runner.RunPayroll("Thang 10/2026");
+            Console.WriteLine(slips[0]);
             Console.WriteLine();
         }
         #endregion
